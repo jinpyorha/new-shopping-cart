@@ -1,5 +1,4 @@
 import React, { Component} from 'react';
-import PropTypes from 'prop-types';
 import CartProduct from './CartProduct';
 import { formatPrice } from '../../utils/utils';
 import './style.scss';
