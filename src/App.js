@@ -11,7 +11,6 @@ class App extends Component {
         <main>
           <Shelf
             className="products"
-            sizes={this.state.sizes}
             products={PRODUCTS}>
           </Shelf>
         </main>
