@@ -29,6 +29,7 @@ class Product extends Component {
         </div>
         <div
           className="shelf-item__buy-btn"
+          onClick={() => this.props.addToCart(product)}
           >
           Add to cart
         </div>

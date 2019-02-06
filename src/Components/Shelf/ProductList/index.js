@@ -10,7 +10,7 @@ class ProductList extends Component {
 
     products.forEach((product) => {
       rows.push(
-        <Product product={product}/>
+        <Product product={product} addToCart={this.props.addToCart}/>
       );
     });
     return (
