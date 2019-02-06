@@ -33,6 +33,17 @@ class App extends Component {
     })
   }
 
+  removeProduct = product => {
+    this.setState(prevState => {
+      const { cartProducts } = prevState
+      return {
+        productQuantity: prevState.productQuantity - 1,
+        cartProducts: cartProducts.filter(p => p.sku !== product.sku),
+        totalPrice: prevState.totalPrice - product.price
+      }
+    })
+  }
+
   render() {
     let PRODUCTS = require('./static/data/products.json');
 
@@ -54,7 +65,8 @@ class App extends Component {
           }}
           cartProducts={this.state.cartProducts}
           isOpen={this.state.isOpen}
-          handleToggle={this.handleToggle}>
+          handleToggle={this.handleToggle}
+          removeProduct={this.removeProduct}>
         </FloatCart>
       </Fragment>
     );

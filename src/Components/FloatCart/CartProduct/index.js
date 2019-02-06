@@ -18,7 +18,7 @@ class CartProduct extends Component {
   };
 
   render() {
-    const { product }  = this.props;
+    const { product, removeProduct }  = this.props;
     const classes = ['shelf-item'];
 
     if (!!this.state.isMouseOver) {
@@ -27,6 +27,12 @@ class CartProduct extends Component {
 
     return (
       <div className={classes.join(' ')}>
+        <div
+          className="shelf-item__del"
+          onMouseOver={() => this.handleMouseOver()}
+          onMouseOut={() => this.handleMouseOut()}
+          onClick={() => removeProduct(product)}
+        />
         <Thumb
           classes="shelf-item__thumb"
           src={require(`../../../static/data/products/${product.sku}_2.jpg`)}

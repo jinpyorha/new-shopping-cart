@@ -13,10 +13,10 @@ class FloatCart extends Component {
   }
 
   render() {
-    const { cartTotal, cartProducts } = this.props;
+    const { cartTotal, cartProducts, removeProduct } = this.props;
     const products =  cartProducts.map(product => {
       return (
-        <CartProduct product={product} key={product.id}/>
+        <CartProduct product={product} removeProduct={removeProduct} key={product.id}/>
       );
     })
     let classes = ['float-cart'];
