@@ -3,6 +3,31 @@ import Shelf from './Components/Shelf/index';
 import FloatCart from './Components/FloatCart/index';
 import SelectSize from './Components/SelectSize/index';
 
+// import firebase from'firebase/app';
+// import auth from 'firebase/auth';
+//
+// firebase.initializeApp({
+//   apiKey:"AIzaSyAvHabpx8h9U-Wn-HJ99qk6qJncu-uJ7RU",
+//   authDomain:"newshoppingcartt.firebaseapp.com"
+//
+// })
+//
+// <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+// <script>
+//   // Initialize Firebase
+//   var config = {
+//     apiKey: "AIzaSyAvHabpx8h9U-Wn-HJ99qk6qJncu-uJ7RU",
+//     authDomain: "newshoppingcartt.firebaseapp.com",
+//     databaseURL: "https://newshoppingcartt.firebaseio.com",
+//     projectId: "newshoppingcartt",
+//     storageBucket: "newshoppingcartt.appspot.com",
+//     messagingSenderId: "1000236527853"
+//   };
+//   firebase.initializeApp(config);
+// </script>
+
+
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -11,11 +36,32 @@ class App extends Component {
       cartProducts: [],
       totalPrice: 0,
       isOpen: false,
-      sizes: new Set()
+      sizes: new Set(),
+      isLogin: false,
+      currentUser:null
     }
     this.addToCart = this.addToCart.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
+
+    // this.authConfig = {
+    //   signInFlow: "popup",
+    //   signInOption:[
+    //     firebase.auth.GoogleAuthorProvider.PROVIDER_ID
+    //   ],
+    //   callbacks: {
+    //     signInSuccess: () => false
+    //   }
+    // }
   }
+
+  // ComponentDidMount(){
+  //   firebase.auth().onAuthStateChanged(user => {
+  //     this.setState({
+  //       isLogin: !!user,
+  //       currentUser: user
+  //     })
+  //   })
+  // }
 
   addToCart(product) {
     this.setState(prevState => {

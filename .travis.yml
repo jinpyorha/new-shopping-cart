@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+- '10'
+
+cache:
+  directories:
+    - $HOME/.npm
+
+install:
+  - npm ci
+
+script:
+  - CI=false npm run build
+
+deploy:
+	provider: firebase
+	token:
+		secure: "1/BvcsUeit0kunRmzcCfFXnZrl7HrwR4qIztQaylnlLRc"
