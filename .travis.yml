@@ -10,9 +10,6 @@ cache:
 install:
   - npm ci
 
-before-script:
-  - npm install
-
 script:
   - CI=false npm run build
 
