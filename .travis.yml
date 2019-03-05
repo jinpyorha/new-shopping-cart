@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '10'
+	- '10'
 
 cache:
   directories:
@@ -16,3 +16,6 @@ deploy:
 	provider: firebase
 	token:
 		  secure: PFpdpuHbFm4BAK+obrVbyAOVsvZ00WywiCvSkl1WZUtEwyConmBDt7LD6Lwmv0VXeFZtrt+0h6JQS4cQA0dr3YLvPwKbm9Wc7iu0RDlqxDbSTsyHM9hvGmKlFUQk76MQfp+9NWJUClbXlcr2vr6BYxuLdCgTQMM3WnR4VXr5lFiq/Rj1hQEQBsNO+2r4pddJLAFLrETUTPHjiF+GrAXh8PflzUMoqxZJ3sj9x3UmJEXY+6Oexci48v2p4fk+tX5Q/OuEI7VD2O9Nk7bQuMBAIrFc48dXmYAzCtuAYTw+pHumcJZS15zNe+J6uKi6yTkGly5WTG7m1CpLONaYrhddkHLwVF1KlhaZig0QbkgZTZmBzxsFWQ/rLJPty5l/U+Kb+MHS/N/yY7aeWSkEA5smq5/gWSNxdwUsgKl67CoEAJFIVTuFnddPkv8HDHe/2JWQ+SGkBzHLRG5md2BdWK5L0r7WtkPoURl4T9Zkxb1oRdHy1uGNJZ/rdPw0TLKC4O1ITTL2xPCxRSd2/cFau3WTaWDMA+ZVFNSKu55OmbaVHUosy38e9chqxxwwu3uYrr4JXe+hQLiuzQLJCyHStf0ey0/UuxRwLkPs3zefil0icEhaEv+pNz50wU9q+BJ7I14OD6F2QhoRCvJag0/ckdunxI5L4mEV+Bx7vP4tFxYRE58=
+	project: "newshoppingcartt"
+
+
