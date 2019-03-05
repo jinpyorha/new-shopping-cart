@@ -9,7 +9,7 @@ const Thumb = props => {
   );
 };
 
-Thumb.PropTypes = {
+Thumb.propTypes = {
   alt: PropTypes.string,
   title: PropTypes.string,
   classes: PropTypes.string,
