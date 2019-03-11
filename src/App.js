@@ -144,7 +144,7 @@ class App extends Component {
       {this.state.user ?
         <div>
           <div className='user-profile'>
-        
+
           </div>
         </div>
         :
