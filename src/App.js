@@ -2,34 +2,15 @@ import React, { Component, Fragment } from 'react';
 import Shelf from './Components/Shelf/index';
 import FloatCart from './Components/FloatCart/index';
 import SelectSize from './Components/SelectSize/index';
+import firebase, {auth, provider} from './config/firebase.js';
 
-// import firebase from'firebase/app';
-// import auth from 'firebase/auth';
-//
-// firebase.initializeApp({
-//   apiKey:"AIzaSyAvHabpx8h9U-Wn-HJ99qk6qJncu-uJ7RU",
-//   authDomain:"newshoppingcartt.firebaseapp.com"
-//
-// })
-//
-// <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
-// <script>
-//   // Initialize Firebase
-//   var config = {
-//     apiKey: "AIzaSyAvHabpx8h9U-Wn-HJ99qk6qJncu-uJ7RU",
-//     authDomain: "newshoppingcartt.firebaseapp.com",
-//     databaseURL: "https://newshoppingcartt.firebaseio.com",
-//     projectId: "newshoppingcartt",
-//     storageBucket: "newshoppingcartt.appspot.com",
-//     messagingSenderId: "1000236527853"
-//   };
-//   firebase.initializeApp(config);
-// </script>
+
 
 
 
 class App extends Component {
   constructor(props) {
+
     super(props)
     this.state = {
       productQuantity: 0,
@@ -38,10 +19,17 @@ class App extends Component {
       isOpen: false,
       sizes: new Set(),
       isLogin: false,
-      currentUser:null
+      currentItem: '',
+      username: '',
+      items: [],
+      user: null
     }
     this.addToCart = this.addToCart.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
+
+
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
 
     // this.authConfig = {
     //   signInFlow: "popup",
@@ -53,17 +41,21 @@ class App extends Component {
     //   }
     // }
   }
-
-  // ComponentDidMount(){
-  //   firebase.auth().onAuthStateChanged(user => {
-  //     this.setState({
-  //       isLogin: !!user,
-  //       currentUser: user
-  //     })
-  //   })
-  // }
+  componentDidMount() {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({ user });
+      }
+    });
+  }
 
   addToCart(product) {
+    // const item = {
+    //   user: this.state.user || this.state.user.email
+    //
+    // }
+
+
     this.setState(prevState => {
       return {
         productQuantity: prevState.productQuantity + 1,
@@ -71,7 +63,11 @@ class App extends Component {
         totalPrice: prevState.totalPrice + product.price
       }
     })
-    this.setState({ isOpen: true })
+    this.setState({
+      isOpen: true,
+      user: this.state.user
+
+    })
   }
 
   handleToggle() {
@@ -104,11 +100,61 @@ class App extends Component {
     return;
   }
 
+
+
+  handleChange(e) {
+    /* ... */
+  }
+  logout() {
+    auth.signOut()
+  .then(() => {
+    this.setState({
+      user: null
+    });
+  });
+  }
+  login() {
+    auth.signInWithPopup(provider)
+      .then((result) => {
+        const user = result.user;
+        this.setState({
+          user
+        });
+      });
+  }
+
+
+
   render() {
     let PRODUCTS = require('./static/data/products.json');
 
     return (
       <Fragment>
+      <div className='app'>
+      <header>
+        <div className="wrapper">
+
+          {this.state.user ?
+            <button onClick={this.logout}>Logout</button>
+          :
+            <button onClick={this.login}>Log In</button>
+          }
+        </div>
+      </header>
+      {this.state.user ?
+        <div>
+          <div className='user-profile'>
+        
+          </div>
+        </div>
+        :
+        <div className='wrapper'>
+          <p>Login to see ur saved cart</p>
+        </div>
+      }
+    </div>
+
+
         <SelectSize
           className="Size"
           sizes = {this.state.sizes}

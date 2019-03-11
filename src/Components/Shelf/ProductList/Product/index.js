@@ -3,8 +3,15 @@ import Thumb from '../../../Thumb'
 import {formatPrice} from '../../../../utils/utils';
 
 class Product extends Component {
+
+
   render() {
+
     const product = this.props.product;
+    // const user = this.props.user;
+
+
+
     let formattedPrice = formatPrice(product.price, product.currencyId);
     return (
       <div
@@ -27,12 +34,19 @@ class Product extends Component {
             <span>{formattedPrice.substr(formattedPrice.length - 3, 3)}</span>
           </div>
         </div>
+
+
+
         <div
           className="shelf-item__buy-btn"
           onClick={() => this.props.addToCart(product)}
           >
           Add to cart
         </div>
+
+
+
+
       </div>
     );
   }
