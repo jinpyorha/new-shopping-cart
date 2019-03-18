@@ -22,6 +22,7 @@ class App extends Component {
       currentItem: '',
       username: '',
       items: [],
+      size_buttons: ["S", "M", "L", "XL"],
       user: null
     }
     this.addToCart = this.addToCart.bind(this)
@@ -164,6 +165,7 @@ class App extends Component {
           <Shelf
             className="products"
             sizes={this.state.sizes}
+            size_order={this.state.size_buttons}
             products={PRODUCTS}
             addToCart={this.addToCart}>
           </Shelf>

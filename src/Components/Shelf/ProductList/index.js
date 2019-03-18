@@ -36,7 +36,7 @@ class ProductList extends Component {
 
     selectItem.forEach((product) => {
       rows.push(
-        <Product product={product} sizes={itemSizes} addToCart={this.props.addToCart}/>
+        <Product product={product} sizes={itemSizes} addToCart={this.props.addToCart}  size_order={this.props.size_order}/>
       );
     });
     return (

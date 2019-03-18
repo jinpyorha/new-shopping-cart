@@ -10,7 +10,16 @@ class Product extends Component {
     const product = this.props.product;
     // const user = this.props.user;
 
-
+    const renderButtons = product.availableSizes.map(size => {
+          return (
+            <button
+              className="size order"
+              key={size}
+              onClick={() => {this.props.addToCart(product);}}>
+              {size}
+            </button>
+          )
+        })
 
     let formattedPrice = formatPrice(product.price, product.currencyId);
     return (
@@ -34,6 +43,7 @@ class Product extends Component {
             <span>{formattedPrice.substr(formattedPrice.length - 3, 3)}</span>
           </div>
         </div>
+        {renderButtons}
 
 
 

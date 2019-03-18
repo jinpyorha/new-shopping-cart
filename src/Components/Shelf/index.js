@@ -11,6 +11,7 @@ class Shelf extends Component {
           <ProductList
             products = {products}
             sizes = {this.props.sizes}
+            size_order = {this.props.size_order}
             addToCart={this.props.addToCart}>
           </ProductList>
         </div>
