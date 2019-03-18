@@ -4,7 +4,7 @@ import './style.scss';
 
 class Shelf extends Component {
   render() {
-    const products = this.props.products.products;
+     const products = this.props.products;
     return (
       <Fragment>
         <div className="shelf-container">

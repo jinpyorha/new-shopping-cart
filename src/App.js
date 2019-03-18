@@ -5,7 +5,14 @@ import SelectSize from './Components/SelectSize/index';
 import firebase, {auth, provider} from './config/firebase.js';
 
 
-
+const config = {
+  apiKey: "AIzaSyAvHabpx8h9U-Wn-HJ99qk6qJncu-uJ7RU",
+  authDomain: "newshoppingcartt.firebaseapp.com",
+  databaseURL: "https://newshoppingcartt.firebaseio.com",
+  projectId: "newshoppingcartt",
+  storageBucket: "newshoppingcartt.appspot.com",
+  messagingSenderId: "1000236527853"
+};
 
 
 class App extends Component {
@@ -18,7 +25,7 @@ class App extends Component {
       totalPrice: 0,
       isOpen: false,
       sizes: new Set(),
-      isLogin: false,
+      isSignedIn:false,
       currentItem: '',
       username: '',
       items: [],
@@ -42,12 +49,32 @@ class App extends Component {
     //   }
     // }
   }
+  uiConfig = {
+    signInFlow: "popup",
+    signInOption: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
+    callbacks: {
+      signInSuccess: () => false
+    }
+  };
+
+
   componentDidMount() {
     auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.setState({ user });
-      }
+
+
+this.setState({ isSignedIn: !!user });
+
+
     });
+    import("./static/data/products.json")
+      .then(json => {
+        this.setState({ cartProducts: json.products });
+      })
+      .catch(error => {
+        alert(error);
+      });
+
+
   }
 
   addToCart(product) {
@@ -166,7 +193,7 @@ class App extends Component {
             className="products"
             sizes={this.state.sizes}
             size_order={this.state.size_buttons}
-            products={PRODUCTS}
+              products={this.state.cartProducts}
             addToCart={this.addToCart}>
           </Shelf>
         </main>
