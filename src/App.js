@@ -2,69 +2,118 @@ import React, { Component, Fragment } from 'react';
 import Shelf from './Components/Shelf/index';
 import FloatCart from './Components/FloatCart/index';
 import SelectSize from './Components/SelectSize/index';
-import firebase, {auth, provider} from './config/firebase.js';
+
+import StyledFireBaseAuth from 'react-firebaseui/StyledFirebaseAuth'
+//import firebase from 'firebase';
+//import firebase, {auth, provider} from './config/firebase.js';
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
 
 
-const config = {
+firebase.initializeApp({
   apiKey: "AIzaSyAvHabpx8h9U-Wn-HJ99qk6qJncu-uJ7RU",
   authDomain: "newshoppingcartt.firebaseapp.com",
   databaseURL: "https://newshoppingcartt.firebaseio.com",
   projectId: "newshoppingcartt",
   storageBucket: "newshoppingcartt.appspot.com",
-  // messagingSenderId: "1000236527853"
-};
+  messagingSenderId: "1000236527853"
+
+})
 
 
 class App extends Component {
   constructor(props) {
-
     super(props)
     this.state = {
       productQuantity: 0,
       products: [],
       cartProducts: [],
-      size_buttons: ["S","M","L","XL"],
+      size_buttons: ["S","M","L","XL"],     // Don't need.
       totalPrice: 0,
       isOpen: false,
       sizes: new Set(),
-      isSignedIn: false,
-      currentItem: '',
-      username: '',
-      user: null,
-      cart: {},
-      all_products: []
+      signedIn: false,
+      currentUser: null,
+      data: [],
+      cart: []
     }
 
     this.addToCart = this.addToCart.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
 
+    this.authConfig = {
+      signInFlow: "popup",
+      signInOptions: [
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID
+      ],
+      callbacks: {
+        signInSuccess: () => false
+      }
+    }
 
-    this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
+    this.db = firebase.database();
+    this.auth = firebase.auth();
+
+    //this.login = this.login.bind(this);
+    //this.logout = this.logout.bind(this);
   }
 
-  uiConfig = {
-    signInFlow: "popup",
-    signInOption: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
-    callbacks: {
-      signInSuccess: () => false
-    }
-  };
-
   componentDidMount() {
+    /*
     let all_products = [];
     firebase.database().ref('products/').orderByChild('0').on('value', snapshot => {
       this.state.all_products = snapshot.val();
-
-
-
     });
+
     import("./static/data/products.json").then(json => {
       this.setState({ products: json.products });
     }).catch(error => {
       alert(error);
     });
+    */
+    this.data().once('value', snapshot => {
+      let existing = snapshot.val()
+      if (existing) {
+        console.log(existing)
+        this.setState({
+          data: Object.keys(existing).map(key => ({
+            ...existing[key]
+          }))
+        })
+      }
+    })
+    this.auth.onAuthStateChanged(user => {
+      this.setState({
+        signedIn: !!user,
+        currentUser: user
+      })
+
+      if (user) {
+        this.cart(user.uid).once('value', snapshot => {
+          let existing = snapshot.val()
+          if (existing) {
+            let cart = Object.keys(existing).map(key => ({
+              ...existing[key]
+            }))
+            this.setState({
+              productQuantity: cart.length,
+              cart: cart
+            })
+          }
+        })
+      } else {
+        this.setState({
+          productQuantity: 0,
+          cart: []
+        })
+      }
+    })
   }
+
+  user = uid => this.db.ref(`users/${uid}`)
+  cart = uid => this.db.ref(`users/${uid}/cart`)
+  data = () => this.db.ref(`products`)
 
   addToCart(product) {
     this.setState(prevState => {
@@ -80,6 +129,7 @@ class App extends Component {
     })
   }
 
+  // Cart menu popup boolean state.
   handleToggle() {
     this.setState({
       isOpen: !this.state.isOpen
@@ -109,7 +159,7 @@ class App extends Component {
     });
     return;
   }
-
+  /*
   logout() {
     auth.signOut().then(() => {
       this.setState({
@@ -124,36 +174,28 @@ class App extends Component {
         user});
     });
   }
-
+  */
   render() {
-       let shown = [];
+    let shown = [];
+
     return (
       <Fragment>
       <div className='app'>
       <header>
         <div className="wrapper">
-          {this.state.user ?
-            <button onClick={this.logout}>Logout</button>
-          :
-            <button onClick={this.login}>Log In</button>
+          {this.state.signedIn ?
+            <div>
+            <h1>Hi {this.auth.currentUser.displayName}</h1>
+            <button onClick={() => this.auth.signOut()}>Log out</button>
+            </div>
+            :
+            <StyledFireBaseAuth
+              uiConfig={this.authConfig}
+              firebaseAuth={this.auth}/>
           }
         </div>
       </header>
-      {this.state.user ?
-        <div>
-          <div className='user-profile'>
-
-          </div>
-        </div>
-        :
-        <div className='wrapper'>
-          <p>Login to see ur saved cart</p>
-        </div>
-      }
     </div>
-
-  {this.state.all_products[0]}
-
         <SelectSize
           className="Size"
           sizes = {this.state.sizes}
@@ -164,7 +206,7 @@ class App extends Component {
             className="products"
             sizes={this.state.sizes}
             size_order={this.state.size_buttons}
-            products={this.state.products}
+            products={this.state.data}
             cartProducts={this.state.cartProducts}
             addToCart={this.addToCart}>
           </Shelf>
