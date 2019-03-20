@@ -1,10 +1,16 @@
 {
   "rules": {
+    "products": {
+      ".read": "true",
+      ".write": "true"
+    },
     "users": {
-       "$uid": {
-         ".read": "true",
-         ".write": "true"
-       }
-     }
+      "$uid": {
+        ".read": "true",
+        ".write": "true"
+      }
+    },
+    ".read": "true",
+    ".write": "true"
   }
 }

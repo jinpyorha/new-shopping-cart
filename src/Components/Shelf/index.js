@@ -4,12 +4,13 @@ import './style.scss';
 
 class Shelf extends Component {
   render() {
-     const products = this.props.products;
+    const products = this.props.products;
     return (
       <Fragment>
         <div className="shelf-container">
           <ProductList
             products = {products}
+            cartProducts = {this.props.cartProducts}
             sizes = {this.props.sizes}
             size_order = {this.props.size_order}
             addToCart={this.props.addToCart}>

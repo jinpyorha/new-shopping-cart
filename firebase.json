@@ -16,8 +16,7 @@
       }
     ]
   },
-  "storage":{
+  "storage": {
     "rules": "storage.rules"
-  }
   }
 }

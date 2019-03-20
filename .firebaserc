@@ -1,5 +1,6 @@
 {
   "projects": {
-    "staging": "newshoppingcartt"
+    "staging": "newshoppingcartt",
+    "default": "newshoppingcartt"
   }
 }

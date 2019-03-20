@@ -11,7 +11,7 @@ const config = {
   databaseURL: "https://newshoppingcartt.firebaseio.com",
   projectId: "newshoppingcartt",
   storageBucket: "newshoppingcartt.appspot.com",
-  messagingSenderId: "1000236527853"
+  // messagingSenderId: "1000236527853"
 };
 
 
@@ -21,34 +21,28 @@ class App extends Component {
     super(props)
     this.state = {
       productQuantity: 0,
+      products: [],
       cartProducts: [],
+      size_buttons: ["S","M","L","XL"],
       totalPrice: 0,
       isOpen: false,
       sizes: new Set(),
-      isSignedIn:false,
+      isSignedIn: false,
       currentItem: '',
       username: '',
-      items: [],
-      size_buttons: ["S", "M", "L", "XL"],
-      user: null
+      user: null,
+      cart: {},
+      all_products: []
     }
+
     this.addToCart = this.addToCart.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
 
 
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
-
-    // this.authConfig = {
-    //   signInFlow: "popup",
-    //   signInOption:[
-    //     firebase.auth.GoogleAuthorProvider.PROVIDER_ID
-    //   ],
-    //   callbacks: {
-    //     signInSuccess: () => false
-    //   }
-    // }
   }
+
   uiConfig = {
     signInFlow: "popup",
     signInOption: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
@@ -57,33 +51,22 @@ class App extends Component {
     }
   };
 
-
   componentDidMount() {
-    auth.onAuthStateChanged((user) => {
+    let all_products = [];
+    firebase.database().ref('products/').orderByChild('0').on('value', snapshot => {
+      this.state.all_products = snapshot.val();
 
-
-this.setState({ isSignedIn: !!user });
 
 
     });
-    import("./static/data/products.json")
-      .then(json => {
-        this.setState({ cartProducts: json.products });
-      })
-      .catch(error => {
-        alert(error);
-      });
-
-
+    import("./static/data/products.json").then(json => {
+      this.setState({ products: json.products });
+    }).catch(error => {
+      alert(error);
+    });
   }
 
   addToCart(product) {
-    // const item = {
-    //   user: this.state.user || this.state.user.email
-    //
-    // }
-
-
     this.setState(prevState => {
       return {
         productQuantity: prevState.productQuantity + 1,
@@ -94,7 +77,6 @@ this.setState({ isSignedIn: !!user });
     this.setState({
       isOpen: true,
       user: this.state.user
-
     })
   }
 
@@ -128,40 +110,28 @@ this.setState({ isSignedIn: !!user });
     return;
   }
 
-
-
-  handleChange(e) {
-    /* ... */
-  }
   logout() {
-    auth.signOut()
-  .then(() => {
-    this.setState({
-      user: null
-    });
-  });
-  }
-  login() {
-    auth.signInWithPopup(provider)
-      .then((result) => {
-        const user = result.user;
-        this.setState({
-          user
-        });
+    auth.signOut().then(() => {
+      this.setState({
+        user: null});
       });
   }
 
-
+  login() {
+    auth.signInWithPopup(provider).then((result) => {
+      const user = result.user;
+      this.setState({
+        user});
+    });
+  }
 
   render() {
-    let PRODUCTS = require('./static/data/products.json');
-
+       let shown = [];
     return (
       <Fragment>
       <div className='app'>
       <header>
         <div className="wrapper">
-
           {this.state.user ?
             <button onClick={this.logout}>Logout</button>
           :
@@ -182,6 +152,7 @@ this.setState({ isSignedIn: !!user });
       }
     </div>
 
+  {this.state.all_products[0]}
 
         <SelectSize
           className="Size"
@@ -193,7 +164,8 @@ this.setState({ isSignedIn: !!user });
             className="products"
             sizes={this.state.sizes}
             size_order={this.state.size_buttons}
-              products={this.state.cartProducts}
+            products={this.state.products}
+            cartProducts={this.state.cartProducts}
             addToCart={this.addToCart}>
           </Shelf>
         </main>
