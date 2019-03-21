@@ -12,10 +12,10 @@ class FloatCart extends Component {
   }
 
   render() {
-    const { cartTotal, cartProducts, removeProduct } = this.props;
+     const { cartTotal, cartProducts, removeProduct, checkout } = this.props;
     const products =  cartProducts.map(product => {
       return (
-        <CartProduct product={product} removeProduct={removeProduct} key={product.id}/>
+        <CartProduct product={product} removeProduct={removeProduct} key={product.id} checkout={checkout}/>
       );
     })
     let classes = ['float-cart'];
@@ -72,7 +72,9 @@ class FloatCart extends Component {
                 )}`}
               </p>
             </div>
-            <div className="buy-btn">
+            <div
+              onClick={()=>this.props.checkout()}
+              className="buy-btn">
               Checkout
             </div>
           </div>

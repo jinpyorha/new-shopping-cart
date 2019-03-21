@@ -12,8 +12,8 @@ class Shelf extends Component {
             products = {products}
             cartProducts = {this.props.cartProducts}
             sizes = {this.props.sizes}
-            size_order = {this.props.size_order}
-            addToCart={this.props.addToCart}>
+            addToCart={this.props.addToCart}
+            checkout={this.props.checkout}>
           </ProductList>
         </div>
       </Fragment>

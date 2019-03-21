@@ -11,7 +11,7 @@ class Product extends Component {
         <button
           className="size order"
           key={size}
-          onClick={() => {this.props.addToCart(product);}}>
+          onClick={() => {this.props.addToCart(product, size);}}>
           {size}
         </button>
       )
@@ -42,7 +42,6 @@ class Product extends Component {
         {renderButtons}
         <div
           className="shelf-item__buy-btn"
-          onClick={() => this.props.addToCart(product)}
           >
           Add to cart
         </div>

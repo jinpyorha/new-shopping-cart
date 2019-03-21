@@ -27,9 +27,8 @@ class App extends Component {
     super(props)
     this.state = {
       productQuantity: 0,
-      products: [],
+
       cartProducts: [],
-      size_buttons: ["S","M","L","XL"],     // Don't need.
       totalPrice: 0,
       isOpen: false,
       sizes: new Set(),
@@ -40,6 +39,7 @@ class App extends Component {
     }
 
     this.addToCart = this.addToCart.bind(this)
+    this.removeFromCart = this.removeFromCart.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
 
     this.authConfig = {
@@ -128,7 +128,91 @@ class App extends Component {
       user: this.state.user
     })
   }
+  addCart(product, size) {
+    let prevState = this.state.cart
+    let updateState = false
 
+    // Check available quantity.
+    for (let item of prevState) {
+      if (item.sku === product.sku) {
+        if (!item.quantity[size]) {
+          item.quantity[size] = 0
+        }
+        else {
+          item.quantity[size] += 1
+          updateState = true
+          break
+        }
+      }
+    }
+
+    // Add product to cart.
+    if (!updateState) {
+      product.quantity = {}
+      product.quantity[size] = 1
+      prevState.push(product)
+    }
+
+    // Update avaiable sizes.
+    let data = this.state.data
+    for (let productBuffer of data) {
+      if (productBuffer.sku === product.sku) {
+        productBuffer.availableSizes[size] -= 1
+      }
+    }
+
+    this.cart(this.state.currentUser.uid).set(prevState)
+    this.setState({
+      data: data,
+      cart: prevState,
+      productQuantity: this.state.productQuantity + 1
+    })
+  }
+
+  checkout = () => {
+    this.data().set(this.state.data)
+    this.cart(this.state.currentUser.uid).set({})
+    this.setState({
+      cart: [],
+      productQuantity: 0,
+      isOpen: false
+    })
+  }
+
+  removeFromCart(product, size) {
+    let prevState = this.state.cart
+    for (let itr in prevState) {
+      let productBuffer = prevState[itr]
+      if (productBuffer.sku === product.sku) {
+        productBuffer.quantity[size] -= 1
+        if (productBuffer.quantity[size] === 0) {
+          delete productBuffer.quantity[size]
+        }
+
+        let keyCount = 0
+        for (let key in productBuffer.quantity) {
+          keyCount += productBuffer.quantity[key]
+        }
+        if (keyCount === 0) {
+          prevState.splice(itr, 1)
+        }
+        break
+      }
+    }
+
+    let data = this.state.data
+    for (let productBuffer of data) {
+      if (productBuffer.sku === product.sku) {
+        productBuffer.availableSizes[size] += 1
+      }
+    }
+    this.cart(this.state.currentUser.uid).set(prevState)
+    this.setState({
+      data: data,
+      cart: prevState,
+      productQuantity: this.state.productQuantity - 1
+    })
+  }
   // Cart menu popup boolean state.
   handleToggle() {
     this.setState({
@@ -205,10 +289,10 @@ class App extends Component {
           <Shelf
             className="products"
             sizes={this.state.sizes}
-            size_order={this.state.size_buttons}
             products={this.state.data}
             cartProducts={this.state.cartProducts}
-            addToCart={this.addToCart}>
+            addToCart={this.addToCart}
+            checkout={this.checkout}>
           </Shelf>
         </main>
         <FloatCart
@@ -220,7 +304,8 @@ class App extends Component {
           cartProducts={this.state.cartProducts}
           isOpen={this.state.isOpen}
           handleToggle={this.handleToggle}
-          removeProduct={this.removeProduct}>
+          removeProduct={this.removeProduct}
+          checkout={this.checkout}>
         </FloatCart>
       </Fragment>
     );
